@@ -3,14 +3,14 @@ import { resolve } from "path";
 import vue from "@vitejs/plugin-vue";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import Delete from "rollup-plugin-delete";
-import vitePluginDts from "vite-plugin-dts";
+import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		vue(),
 		vueSetupExtend(),
-		vitePluginDts({
+		dts({
 			outputDir: "dist",
 			staticImport: true,
 			insertTypesEntry: true,
@@ -18,7 +18,7 @@ export default defineConfig({
 	],
 	build: {
 		lib: {
-			entry: resolve(__dirname, "packages/entry.ts"),
+			entry: resolve(__dirname, "src/index.ts"),
 			name: "aegis-odyssey",
 			fileName: (format) => `aegis-odyssey.${format}.js`,
 		},

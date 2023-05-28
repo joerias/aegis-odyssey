@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import * as components from "./index";
+import * as components from "./components";
 import { Person, type PersonOptsType } from "./js/person";
 
 export const Odyssey = {

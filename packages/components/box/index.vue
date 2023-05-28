@@ -14,7 +14,7 @@
 </template>
 
 <style scoped lang="less">
-@import "../variable.less";
+@import "../../variable.less";
 .box {
 	border: 1px solid @col-blue;
 	border-radius: @radius;

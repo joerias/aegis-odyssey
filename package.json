@@ -5,7 +5,11 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc && vite build",
-		"preview": "vite preview"
+		"version": "npm run build && git add -A",
+		"postversion": "git push && git push --tags",
+		"_____comment": "npm run git -- 'commit-msg'  so you can push and update by a auto way",
+		"git": "npm run build && git add . && git commit -m",
+		"postgit": "npm version patch && npm publish && git push --all"
 	},
 	"main": "dist/aegis-odyssey.umd.js",
 	"module": "dist/aegis-odyssey.es.js",

@@ -1,8 +1,8 @@
 <script setup lang="ts" name="App">
 // 本地源代码调试
-// import { Person, type PersonOptsType } from "../";
+import { Person, type PersonOptsType } from "../";
 // 本地编译后调试
-import { Person, type PersonOptsType } from "../../dist/aegis-odyssey.es.js";
+// import { Person, type PersonOptsType } from "../../dist/aegis-odyssey.es.js";
 const info: PersonOptsType = { name: "Jim", age: 20 };
 const jim = new Person(info);
 </script>

@@ -1,11 +1,13 @@
-import type { App } from "vue";
+import type { App, Component } from "vue";
 import * as components from "./components";
 import { Person, type PersonOptsType } from "./js/person";
 
+const obj: { [key: string]: Component } = components;
+
 export const Odyssey = {
 	install: (app: App) => {
-		for (const i in components) {
-			app.component(i, (<any>components)[i]);
+		for (const i in obj) {
+			app.component(i, obj[i]);
 		}
 	},
 };

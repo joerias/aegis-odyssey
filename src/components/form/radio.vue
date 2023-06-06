@@ -11,7 +11,6 @@ type Props = {
 	size: "large" | "default" | "small";
 	disabled: boolean;
 };
-
 const props = withDefaults(defineProps<Props>(), {
 	type: "default",
 	size: "default",

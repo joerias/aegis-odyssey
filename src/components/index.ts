@@ -1,3 +1,3 @@
-import Box from "./box/index.vue";
+import Radio from "./form/radio.vue";
 
-export { Box };
+export { Radio };

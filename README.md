@@ -1,18 +1,39 @@
-# Vue 3 + TypeScript + Vite
+# AegisOdyssey 插件说明
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+实现项目内部分 ui 的全局化配置和使用。
 
-## Recommended IDE Setup
+#### 安装
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+```javascript
+npm i aegis-odyssey
+```
 
-## Type Support For `.vue` Imports in TS
+#### 全局配置
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+1. main.ts 引入对应插件
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+```javascript
+// 引入
+import { Odyssey } from "aegis-odyssey";
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+// 全局挂载
+app.use(Odyssey).mount("#app");
+```
+
+#### UI 组件
+
+1. radio 复合组件
+
+```javascript
+// 使用方法
+<ORadio v-model="rValue" />
+<o-radio v-model="rValue" type="default" size="default" :disabled="false" :list=['是','否'] />
+```
+
+| key      | 条件 |                   value                   |   default   |
+| :------- | :--: | :---------------------------------------: | :---------: |
+| v-model  | 必填 |           string &#124; number            |     ''      |
+| type     | 选填 | "default" &#124; "border" &#124; "button" |  'default'  |
+| size     | 选填 |  "large" &#124; "default" &#124; "small"  |  'default'  |
+| disabled | 选填 |                  boolean                  |    false    |
+| list     | 选填 |         (string &#124; number) []         | ["是","否"] |

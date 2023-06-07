@@ -1,3 +1,3 @@
-import Radio from "./form/radio.vue";
+import ORadio from "./form/radio.vue";
 
-export { Radio };
+export { ORadio };

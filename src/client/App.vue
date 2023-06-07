@@ -10,5 +10,5 @@ const rValue = ref("是");
 <template>
 	<div>index</div>
 
-	<Radio v-model="rValue" />
+	<o-radio v-model="rValue" type="button" />
 </template>

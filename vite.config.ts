@@ -6,7 +6,11 @@ import dts from "vite-plugin-dts";
 
 export default defineConfig({
 	plugins: [
-		vue(),
+		vue({
+			script: {
+				defineModel: true,
+			},
+		}),
 		dts({
 			outputDir: "dist",
 			staticImport: true,

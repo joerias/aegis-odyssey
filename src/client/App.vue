@@ -5,7 +5,7 @@ import { ref } from "vue";
 // 本地编译后调试
 // import { Person, type PersonOptsType } from "../../dist/aegis-odyssey.es.js";
 
-const tableAddValue = ref([
+const tableValue = ref([
 	{
 		name: "Tom",
 		gender: "男",
@@ -23,7 +23,7 @@ const tableAddValue = ref([
 		info: "",
 	},
 ]);
-const tableAddHeaderValue = ref({
+const tableHeaderValue = ref({
 	label: {
 		name: "姓名",
 		gender: "性别",
@@ -51,24 +51,32 @@ const showSwitch = ref(false);
 const handleSwitch = () => {
 	showSwitch.value = !showSwitch.value;
 };
-const addObj = ref({
+const tableAddValue = ref({
 	name: "",
 	gender: "女",
-	country: "",
+	country: "日本",
 	date: "",
 	address: "",
 	info: "",
 });
+const handleOpen = (type: number, idx: number) => {
+	if (type === 1) {
+		console.log(idx);
+	} else {
+		tableValue.value.splice(idx, 1);
+	}
+};
 </script>
 
 <template>
 	<div>
 		<o-table
-			v-model="tableAddValue"
-			v-model:header="tableAddHeaderValue"
+			v-model="tableValue"
+			v-model:addValue="tableAddValue"
+			:header="tableHeaderValue"
 			index
 			add
-			:selectList="{ country: ['中国', '日本', '美国'] }"
+			:list="{ country: ['中国', '日本', '美国'] }"
 		>
 			<template #info="scope">
 				<div v-show="!showSwitch" class="show" @click="handleSwitch">
@@ -77,22 +85,16 @@ const addObj = ref({
 				<el-input v-show="showSwitch" v-model="scope.row.date" type="textarea" autosize />
 			</template>
 			<template #operate="scope">
-				<el-button class="f12" type="primary" link> 打开 </el-button>
-				<el-button class="f12" type="primary" link> 删除 </el-button>
+				<el-button class="f12" type="primary" link @click="handleOpen(1, scope.$index)"> 打开 </el-button>
+				<el-button class="f12" type="primary" link @click="handleOpen(2, scope.$index)"> 删除 </el-button>
 			</template>
 			<template #add>
-				<div>
-					<el-input class="mr10" v-model="addObj.name" />
-					<o-radio class="mr10" v-model="addObj.gender" type="button" :list="['男', '女']" />
-					<div class="w200">
-						<el-select class="mr10" v-model="addObj.country" placeholder="请选择">
-							<el-option v-for="(o2, i2) in ['中国', '日本', '美国']" :key="i2" :value="o2" />
-						</el-select>
-					</div>
-					<el-input class="mr10" v-model="addObj.date" />
-					<el-input class="mr10" v-model="addObj.address" />
-					<el-input class="mr10" v-model="addObj.info" />
-				</div>
+				<el-input class="mr10" v-model="tableAddValue.name" clearable />
+				<o-radio class="mr10" v-model="tableAddValue.gender" type="button" :list="['男', '女']" />
+				<o-select class="w100 mr10" v-model="tableAddValue.country" :list="['中国', '日本', '美国']" />
+				<el-input class="mr10" v-model="tableAddValue.date" clearable />
+				<el-input class="mr10" v-model="tableAddValue.address" clearable />
+				<el-input class="mr10" v-model="tableAddValue.info" clearable />
 			</template>
 		</o-table>
 	</div>

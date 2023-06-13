@@ -20,13 +20,30 @@ const props = withDefaults(defineProps<Props>(), {
 const modelValue = defineModel();
 </script>
 <template>
-	<el-radio-group v-if="props.type === 'default'" v-model="modelValue" :size="props.size" :disabled="props.disabled">
-		<el-radio v-for="(o, i) in props.list" :key="i" :label="o" />
-	</el-radio-group>
-	<el-radio-group v-if="props.type === 'border'" v-model="modelValue" :size="props.size" :disabled="props.disabled">
-		<el-radio border v-for="(o, i) in props.list" :key="i" :label="o" />
-	</el-radio-group>
-	<el-radio-group v-if="props.type === 'button'" v-model="modelValue" :size="props.size" :disabled="props.disabled">
-		<el-radio-button v-for="(o, i) in props.list" :key="i" :label="o" />
-	</el-radio-group>
+	<div>
+		<el-radio-group
+			v-if="props.type === 'default'"
+			v-model="modelValue"
+			:size="props.size"
+			:disabled="props.disabled"
+		>
+			<el-radio v-for="(o, i) in props.list" :key="i" :label="o" />
+		</el-radio-group>
+		<el-radio-group
+			v-if="props.type === 'border'"
+			v-model="modelValue"
+			:size="props.size"
+			:disabled="props.disabled"
+		>
+			<el-radio border v-for="(o, i) in props.list" :key="i" :label="o" />
+		</el-radio-group>
+		<el-radio-group
+			v-if="props.type === 'button'"
+			v-model="modelValue"
+			:size="props.size"
+			:disabled="props.disabled"
+		>
+			<el-radio-button v-for="(o, i) in props.list" :key="i" :label="o" />
+		</el-radio-group>
+	</div>
 </template>

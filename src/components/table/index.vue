@@ -7,12 +7,15 @@ import { useSlots } from "vue";
 
 type Props = {
 	modelValue: any;
+	addValue: any;
 	header?: any;
+	btnName?: string;
 	index?: boolean;
 	add?: boolean;
-	selectList?: any;
+	list?: any;
 };
 const props = withDefaults(defineProps<Props>(), {
+	btnName: "添加",
 	index: false,
 	add: false,
 });
@@ -23,10 +26,15 @@ type Obj = {
 const modelValue = defineModel();
 const getUnit = { ...(<Obj[]>modelValue.value)[0] };
 Object.keys(getUnit).forEach((v) => (getUnit[v] = ""));
+const addValue = defineModel("addValue");
+const addValueOrigin = { ...addValue };
 
+const addState = !!useSlots().add;
 const handleOperate = (idx: number) => {
 	if (typeof idx !== "number") {
-		if (!!useSlots().add) {
+		if (addState) {
+			(<Obj[]>modelValue.value).push(<Obj>addValue.value);
+			addValue.value = { ...addValueOrigin };
 		} else {
 			(<Obj[]>modelValue.value).push(getUnit);
 		}
@@ -48,7 +56,7 @@ const handleOperate = (idx: number) => {
 			<el-table-column v-else :prop="o" :label="props.header.label[o]" :width="props.header.width[o] || 0">
 				<template #default="scope">
 					<template v-if="props.header.edit[o] === 'input'">
-						<el-input v-model="scope.row[o]" />
+						<el-input v-model="scope.row[o]" clearable />
 					</template>
 					<template v-else-if="props.header.edit[o] === 'textarea'">
 						<el-input v-model="scope.row[o]" type="textarea" autosize />
@@ -57,9 +65,7 @@ const handleOperate = (idx: number) => {
 						<o-radio v-model="scope.row[o]" type="button" :list="['男', '女']" />
 					</template>
 					<template v-else-if="props.header.edit[o] === 'select'">
-						<el-select v-model="scope.row[o]" placeholder="请选择">
-							<el-option v-for="(o2, i2) in props.selectList[o]" :key="i2" :value="o2" />
-						</el-select>
+						<o-select v-model="scope.row[o]" :list="props.list[o]" />
 					</template>
 					<slot v-else-if="props.header.edit[o] === 'custom'" :name="o" v-bind="scope" />
 				</template>
@@ -85,7 +91,7 @@ const handleOperate = (idx: number) => {
 		<div v-if="!!$slots.add" class="content">
 			<slot name="add" />
 		</div>
-		<el-button type="primary" plain @click="handleOperate">添加</el-button>
+		<el-button type="primary" plain @click="handleOperate">{{ props.btnName }}</el-button>
 	</div>
 </template>
 
@@ -104,6 +110,9 @@ const handleOperate = (idx: number) => {
 		display: flex;
 		:deep(.el-radio-group) {
 			flex-wrap: nowrap;
+		}
+		:deep(.el-select) {
+			flex: 0 0 auto;
 		}
 	}
 }

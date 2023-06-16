@@ -7,6 +7,7 @@ import { ref } from "vue";
 
 const tableValue = ref([
 	{
+		type: "原告",
 		name: "Tom",
 		gender: "男",
 		country: "中国",
@@ -15,6 +16,16 @@ const tableValue = ref([
 		info: "",
 	},
 	{
+		type: "原告",
+		name: "Johnny",
+		gender: "男",
+		country: "日本",
+		date: "2016-05-03",
+		address: "No. 189, Grove St, Los Angeles",
+		info: "",
+	},
+	{
+		type: "被告",
 		name: "Jack",
 		gender: "女",
 		country: "美国",
@@ -25,6 +36,7 @@ const tableValue = ref([
 ]);
 const tableHeaderValue = ref({
 	label: {
+		type: "类型",
 		name: "姓名",
 		gender: "性别",
 		country: "国籍",
@@ -33,6 +45,7 @@ const tableHeaderValue = ref({
 		info: "自定义",
 	},
 	width: {
+		type: 60,
 		name: 150,
 		gender: 116,
 		country: 116,
@@ -52,9 +65,10 @@ const handleSwitch = () => {
 	showSwitch.value = !showSwitch.value;
 };
 const tableAddValue = ref({
+	type: "原告",
 	name: "",
-	gender: "女",
-	country: "日本",
+	gender: "男",
+	country: "",
 	date: "",
 	address: "",
 	info: "",
@@ -74,7 +88,7 @@ const handleOpen = (type: number, idx: number) => {
 			v-model="tableValue"
 			v-model:addValue="tableAddValue"
 			:header="tableHeaderValue"
-			index
+			merge="type"
 			add
 			:list="{ country: ['中国', '日本', '美国'] }"
 		>
@@ -89,6 +103,7 @@ const handleOpen = (type: number, idx: number) => {
 				<el-button class="f12" type="primary" link @click="handleOpen(2, scope.$index)"> 删除 </el-button>
 			</template>
 			<template #add>
+				<o-select class="w100 mr10" v-model="tableAddValue.type" :list="['原告', '被告']" />
 				<el-input class="mr10" v-model="tableAddValue.name" clearable />
 				<o-radio class="mr10" v-model="tableAddValue.gender" type="button" :list="['男', '女']" />
 				<o-select class="w100 mr10" v-model="tableAddValue.country" :list="['中国', '日本', '美国']" />

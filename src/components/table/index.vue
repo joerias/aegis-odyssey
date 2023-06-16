@@ -3,7 +3,7 @@ defineOptions({
 	name: "OTable",
 });
 
-import { useSlots } from "vue";
+import { useSlots, computed } from "vue";
 
 type Props = {
 	modelValue: any;
@@ -13,11 +13,13 @@ type Props = {
 	index?: boolean;
 	add?: boolean;
 	list?: any;
+	merge?: string;
 };
 const props = withDefaults(defineProps<Props>(), {
 	btnName: "添加",
 	index: false,
 	add: false,
+	merge: "",
 });
 
 type Obj = {
@@ -42,9 +44,56 @@ const handleOperate = (idx: number) => {
 		(<Obj[]>modelValue.value).splice(idx, 1);
 	}
 };
+
+const typeMap = computed(() => {
+	const m = new Map(),
+		n = new Map();
+	modelValue.value.forEach((v, i) => {
+		if (m.has(v[props.merge])) {
+			m.set(v[props.merge], m.get(v[props.merge]) + 1);
+		} else {
+			m.set(v[props.merge], 1);
+			n.set(v[props.merge], i);
+		}
+	});
+	return props.merge ? { len: m, pos: n } : null;
+});
+console.log(typeMap.value);
+
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProps) => {
+	if (columnIndex === 0) {
+		if (props.merge) {
+			for (const i of typeMap.value.pos) {
+				console.log(rowIndex, i, rowIndex === i[1]);
+
+				if (rowIndex === i[1]) {
+					// console.log("=", rowIndex, i, typeMap.value?.len.get(i[0]));
+					// return {
+					// 	rowspan: typeMap.value?.len.get(i[0]),
+					// 	colspan: 1,
+					// };
+					// return {};
+				} else {
+					return {};
+					// console.log("!", rowIndex);
+					// console.log("else", i, i[1], rowIndex);
+					// return {
+					// 	rowspan: 0,
+					// 	colspan: 0,
+					// };
+				}
+			}
+		} else {
+			return {
+				rowspan: 1,
+				colspan: 1,
+			};
+		}
+	}
+};
 </script>
 <template>
-	<el-table :data="modelValue" stripe border>
+	<el-table :data="modelValue" stripe border :span-method="objectSpanMethod">
 		<el-table-column v-if="props.index" type="index" width="40" />
 		<template v-for="o in Object.keys(props.header.label)">
 			<el-table-column

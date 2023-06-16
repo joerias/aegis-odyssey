@@ -155,14 +155,14 @@ const handleOpen = (type: number, idx: number) => {
 | key              | 条件 |                         value                          |     default      | desc                                                                                            |
 | :--------------- | :--: | :----------------------------------------------------: | :--------------: | :---------------------------------------------------------------------------------------------- |
 | v-model          | 必填 |                        [{...}]                         |                  | table 数组对象                                                                                  |
-| v-model:addValue | 选填 |                         {...}                          |                  | "新增"功能下 custom 的单项 item                                                                 |
+| v-model:addValue | 选填 |                         {...}                          |                  | "新增"功能 + custom 的单项 item                                                                 |
 | header           | 必填 |                           {}                           |                  | table 渲染 th 的规则                                                                            |
 | header.label     | 必填 |                         string                         |                  | 对应 th 里面的描述名，不可缺省                                                                  |
 | header.width     | 选填 |                         number                         |                  | 对应单列宽度，不定义为自适应，可缺省                                                            |
 | header.edit      | 选填 | input&#124;radio&#124;select&#124;textarea&#124;custom |                  | 对应单列是否编辑，可缺省                                                                        |
 | btnName          | 选填 |                         string                         |      '添加'      | table"新增"功能默认按钮描述                                                                     |
 | index            | 选填 |                        boolean                         |      false       | table 是否显示序列                                                                              |
-| add              | 选填 |                        boolean                         |      false       | table 是否显示"新增"功能，不配置$slots.add 的话默认给 v-model 的 item 生成一组空数据            |
+| add              | 选填 |                        boolean                         |      false       | table 是否显示"新增"功能，不配置$slots.add 的话（custom）默认给 v-model 的 item 生成一组空数据            |
 | list             | 必填 |               (string &#124; number) []                | {key: ["A","B"]} | table 单列为 select、radio 组件的默认选项值，key 位单列 prop 名称                               |
 | #key             | 选填 |                      #key="scope"                      |                  | slot 插槽，对应 header.edit 属性里的 key，提供自定义单项的内容编写，通过 scope 获得当前 item 值 |
 | #operate         | 选填 |                    #operate="scope"                    |                  | "新增"功能下，必然有删除 item 默认列。该 slot 插槽，提供自定义“操作”的内容编写                  |

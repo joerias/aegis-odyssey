@@ -44,7 +44,7 @@ const tableValue = ref<tableType[]>([
 		info: "",
 	},
 ]);
-const tableHeaderValue = ref({
+const tableHeaderValue = {
 	label: {
 		type: "类型",
 		name: "姓名",
@@ -69,7 +69,7 @@ const tableHeaderValue = ref({
 		address: "textarea",
 		info: "custom",
 	},
-});
+};
 const showSwitch = ref(false);
 const handleSwitch = () => {
 	showSwitch.value = !showSwitch.value;
@@ -124,5 +124,17 @@ const handleOpen = (type: number, idx: number) => {
 		</o-table>
 	</div>
 
-	<div></div>
+	<div>
+		<el-form>
+			<el-form-item label="是否减半" disabled>
+				<div>
+					<el-radio-group v-model="tableAddValue.date">
+						<el-radio-button label="o" />
+						<el-radio-button label="do" />
+					</el-radio-group>
+				</div>
+				<!-- <o-radio v-model="tableAddValue.date" type="button" /> -->
+			</el-form-item>
+		</el-form>
+	</div>
 </template>

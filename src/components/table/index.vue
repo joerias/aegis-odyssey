@@ -111,9 +111,14 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 				v-if="!Object.keys(props.header!.edit).includes(o)"
 				:prop="o"
 				:label="props.header!.label[o]"
-				:width="props.header!.width[o] || 0"
+				:width="props.header!.width ? props.header!.width[o] || 0 : 0"
 			/>
-			<el-table-column v-else :prop="o" :label="props.header!.label[o]" :width="props.header!.width[o] || 0">
+			<el-table-column
+				v-else
+				:prop="o"
+				:label="props.header!.label[o]"
+				:width="props.header!.width ? props.header!.width[o] || 0 : 0"
+			>
 				<template #default="scope">
 					<template v-if="props.header!.edit[o] === 'input'">
 						<el-input v-model="scope.row[o]" clearable />
@@ -139,7 +144,7 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 		<el-table-column
 			v-else="props.add && !$slots.operate"
 			label="操作"
-			:width="props.header!.width.operate ?? 60"
+			:width="props.header!.width ? props.header!.width.operate ?? 60 : 60"
 			header-align="center"
 		>
 			<template #default="scope">
@@ -151,7 +156,9 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 		<div v-if="!!$slots.add" class="content">
 			<slot name="add" />
 		</div>
-		<el-button type="primary" plain @click="handleOperate">{{ props.btnName }}</el-button>
+		<div class="btn">
+			<el-button type="primary" plain @click="handleOperate">{{ props.btnName }}</el-button>
+		</div>
 	</div>
 </template>
 
@@ -162,18 +169,27 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 	justify-content: space-between;
 	margin-top: 10px;
 	&.single {
+		.btn {
+			flex: 1;
+		}
 		.el-button {
 			width: 100%;
 		}
 	}
 	.content {
 		display: flex;
+		flex: 1;
 		:deep(.el-radio-group) {
 			flex-wrap: nowrap;
 		}
 		:deep(.el-select) {
 			flex: 0 0 auto;
 		}
+	}
+	.btn {
+		display: flex;
+		flex: 0 0 80px;
+		justify-content: flex-end;
 	}
 }
 </style>

@@ -35,8 +35,11 @@ type Obj = {
 	[key: string]: string;
 };
 const modelValue = defineModel();
-const getUnit = { ...(<Obj[]>modelValue.value)[0] };
-Object.keys(getUnit).forEach((v) => (getUnit[v] = ""));
+const getUnit = computed(() => {
+	const unit = { ...(<Obj[]>modelValue.value)[0] };
+	Object.keys(unit).forEach((v) => (unit[v] = ""));
+	return unit;
+});
 const addValue = defineModel("addValue");
 const addValueOrigin = { ...addValue };
 
@@ -47,14 +50,13 @@ const handleOperate = (idx: number) => {
 	if (typeof idx !== "number") {
 		// 行新增
 		if (addState) {
-			console.log(1, addState);
 			// 自定义新增
 			(<Obj[]>modelValue.value).push(<Obj>addValue.value);
 			addValue.value = { ...addValueOrigin };
 		} else {
 			console.log(0, getUnit);
 			// 默认新增
-			(<Obj[]>modelValue.value).push(getUnit);
+			(<Obj[]>modelValue.value).push(getUnit.value);
 		}
 	} else {
 		// 行删除

@@ -127,7 +127,7 @@ const handleOpen = (type: number, idx: number) => {
   v-model="tableValue"
   v-model:addValue="tableAddValue"
   :header="tableHeaderValue"
-  index
+	merge="type"
   add
   :list="{ country: ['中国', '日本', '美国'] }"
 >
@@ -162,7 +162,8 @@ const handleOpen = (type: number, idx: number) => {
 | header.edit      | 选填 | input&#124;radio&#124;select&#124;textarea&#124;custom |                  | 对应单列是否编辑，可缺省                                                                        |
 | btnName          | 选填 |                         string                         |      '添加'      | table"新增"功能默认按钮描述                                                                     |
 | index            | 选填 |                        boolean                         |      false       | table 是否显示序列                                                                              |
-| add              | 选填 |                        boolean                         |      false       | table 是否显示"新增"功能，不配置$slots.add 的话（custom）默认给 v-model 的 item 生成一组空数据            |
+| merge            | 选填 |                         string                         |        ''        | table 是否分组，分组 key 由 merge 值决定，需要放在列第一序列，最大分组仅支持 3 组               |
+| add              | 选填 |                        boolean                         |      false       | table 是否显示"新增"功能，不配置$slots.add 的话（custom）默认给 v-model 的 item 生成一组空数据  |
 | list             | 必填 |               (string &#124; number) []                | {key: ["A","B"]} | table 单列为 select、radio 组件的默认选项值，key 位单列 prop 名称                               |
 | #key             | 选填 |                      #key="scope"                      |                  | slot 插槽，对应 header.edit 属性里的 key，提供自定义单项的内容编写，通过 scope 获得当前 item 值 |
 | #operate         | 选填 |                    #operate="scope"                    |                  | "新增"功能下，必然有删除 item 默认列。该 slot 插槽，提供自定义“操作”的内容编写                  |

@@ -1,20 +1,29 @@
 <script setup lang="ts">
+import { useSlots, computed } from "vue";
+import type { TableColumnCtx } from "element-plus";
 defineOptions({
 	name: "OTable",
 });
 
-import { useSlots, computed } from "vue";
-
 type Props = {
 	modelValue: any;
 	addValue: any;
-	header?: any;
+	header?: { [key: string]: { [key: string]: string | number } };
 	btnName?: string;
 	index?: boolean;
 	add?: boolean;
-	list?: any;
+	list?: TypeList;
 	merge?: string;
 };
+type TypeList = {
+	[key: string]: (string | number)[];
+};
+interface SpanMethodProps {
+	row: any;
+	column: TableColumnCtx<any>;
+	rowIndex: number;
+	columnIndex: number;
+}
 const props = withDefaults(defineProps<Props>(), {
 	btnName: "添加",
 	index: false,
@@ -45,10 +54,10 @@ const handleOperate = (idx: number) => {
 	}
 };
 
-const typeMap = computed(() => {
+const typeArr = computed(() => {
 	const m = new Map(),
 		n = new Map();
-	modelValue.value.forEach((v, i) => {
+	(<any>modelValue.value).forEach((v: any, i: number) => {
 		if (m.has(v[props.merge])) {
 			m.set(v[props.merge], m.get(v[props.merge]) + 1);
 		} else {
@@ -56,32 +65,34 @@ const typeMap = computed(() => {
 			n.set(v[props.merge], i);
 		}
 	});
-	return props.merge ? { len: m, pos: n } : null;
+	const map = { len: m, pos: n };
+	console.log([...map.len.values()]);
+	return [...map.len.values()];
 });
-console.log(typeMap.value);
 
-const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProps) => {
+const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 	if (columnIndex === 0) {
 		if (props.merge) {
-			for (const i of typeMap.value.pos) {
-				console.log(rowIndex, i, rowIndex === i[1]);
-
-				if (rowIndex === i[1]) {
-					// console.log("=", rowIndex, i, typeMap.value?.len.get(i[0]));
-					// return {
-					// 	rowspan: typeMap.value?.len.get(i[0]),
-					// 	colspan: 1,
-					// };
-					// return {};
-				} else {
-					return {};
-					// console.log("!", rowIndex);
-					// console.log("else", i, i[1], rowIndex);
-					// return {
-					// 	rowspan: 0,
-					// 	colspan: 0,
-					// };
-				}
+			if (rowIndex === 0) {
+				return {
+					rowspan: typeArr.value[0],
+					colspan: 1,
+				};
+			} else if (rowIndex === typeArr.value[0]) {
+				return {
+					rowspan: typeArr.value[1],
+					colspan: 1,
+				};
+			} else if (rowIndex === typeArr.value[0] + typeArr.value[1]) {
+				return {
+					rowspan: typeArr.value[2],
+					colspan: 1,
+				};
+			} else {
+				return {
+					rowspan: 0,
+					colspan: 0,
+				};
 			}
 		} else {
 			return {
@@ -95,28 +106,28 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProp
 <template>
 	<el-table :data="modelValue" stripe border :span-method="objectSpanMethod">
 		<el-table-column v-if="props.index" type="index" width="40" />
-		<template v-for="o in Object.keys(props.header.label)">
+		<template v-for="o in Object.keys(props.header!.label)">
 			<el-table-column
-				v-if="!Object.keys(props.header.edit).includes(o)"
+				v-if="!Object.keys(props.header!.edit).includes(o)"
 				:prop="o"
-				:label="props.header.label[o]"
-				:width="props.header.width[o] || 0"
+				:label="props.header!.label[o]"
+				:width="props.header!.width[o] || 0"
 			/>
-			<el-table-column v-else :prop="o" :label="props.header.label[o]" :width="props.header.width[o] || 0">
+			<el-table-column v-else :prop="o" :label="props.header!.label[o]" :width="props.header!.width[o] || 0">
 				<template #default="scope">
-					<template v-if="props.header.edit[o] === 'input'">
+					<template v-if="props.header!.edit[o] === 'input'">
 						<el-input v-model="scope.row[o]" clearable />
 					</template>
-					<template v-else-if="props.header.edit[o] === 'textarea'">
+					<template v-else-if="props.header!.edit[o] === 'textarea'">
 						<el-input v-model="scope.row[o]" type="textarea" autosize />
 					</template>
-					<template v-else-if="props.header.edit[o] === 'radio'">
+					<template v-else-if="props.header!.edit[o] === 'radio'">
 						<o-radio v-model="scope.row[o]" type="button" :list="['男', '女']" />
 					</template>
-					<template v-else-if="props.header.edit[o] === 'select'">
-						<o-select v-model="scope.row[o]" :list="props.list[o]" />
+					<template v-else-if="props.header!.edit[o] === 'select'">
+						<o-select v-model="scope.row[o]" :list="props.list![o]" />
 					</template>
-					<slot v-else-if="props.header.edit[o] === 'custom'" :name="o" v-bind="scope" />
+					<slot v-else-if="props.header!.edit[o] === 'custom'" :name="o" v-bind="scope" />
 				</template>
 			</el-table-column>
 		</template>
@@ -128,7 +139,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProp
 		<el-table-column
 			v-else="props.add && !$slots.operate"
 			label="操作"
-			:width="props.header.width.operate ?? 60"
+			:width="props.header!.width.operate ?? 60"
 			header-align="center"
 		>
 			<template #default="scope">

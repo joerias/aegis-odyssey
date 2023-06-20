@@ -5,7 +5,17 @@ import { ref } from "vue";
 // 本地编译后调试
 // import { Person, type PersonOptsType } from "../../dist/aegis-odyssey.es.js";
 
-const tableValue = ref([
+type tableType = {
+	type: string;
+	name: string;
+	gender: string;
+	country: string;
+	date: string;
+	address: string;
+	info: string;
+};
+
+const tableValue = ref<tableType[]>([
 	{
 		type: "原告",
 		name: "Tom",
@@ -64,7 +74,7 @@ const showSwitch = ref(false);
 const handleSwitch = () => {
 	showSwitch.value = !showSwitch.value;
 };
-const tableAddValue = ref({
+const tableAddValue = ref<tableType>({
 	type: "原告",
 	name: "",
 	gender: "男",

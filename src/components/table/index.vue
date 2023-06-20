@@ -36,14 +36,15 @@ type Obj = {
 };
 const modelValue = defineModel();
 const getUnit = computed(() => {
-	const unit = { ...(<Obj[]>modelValue.value)[0] };
-	Object.keys(unit).forEach((v) => (unit[v] = ""));
+	let unit: any = undefined;
+	if ((<Obj[]>modelValue.value).length !== 0) {
+		unit = { ...(<Obj[]>modelValue.value)[0] };
+		Object.keys(unit).forEach((v) => (unit[v] = ""));
+	}
 	return unit;
 });
 const addValue = defineModel("addValue");
 const addValueOrigin = { ...addValue };
-
-console.log(getUnit, (<Obj[]>modelValue.value)[0]);
 
 const addState = !!useSlots().add;
 const handleOperate = (idx: number) => {
@@ -54,7 +55,6 @@ const handleOperate = (idx: number) => {
 			(<Obj[]>modelValue.value).push(<Obj>addValue.value);
 			addValue.value = { ...addValueOrigin };
 		} else {
-			console.log(0, getUnit);
 			// 默认新增
 			(<Obj[]>modelValue.value).push(getUnit.value);
 		}

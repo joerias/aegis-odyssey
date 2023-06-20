@@ -40,16 +40,24 @@ Object.keys(getUnit).forEach((v) => (getUnit[v] = ""));
 const addValue = defineModel("addValue");
 const addValueOrigin = { ...addValue };
 
+console.log(getUnit, (<Obj[]>modelValue.value)[0]);
+
 const addState = !!useSlots().add;
 const handleOperate = (idx: number) => {
 	if (typeof idx !== "number") {
+		// 行新增
 		if (addState) {
+			console.log(1, addState);
+			// 自定义新增
 			(<Obj[]>modelValue.value).push(<Obj>addValue.value);
 			addValue.value = { ...addValueOrigin };
 		} else {
+			console.log(0, getUnit);
+			// 默认新增
 			(<Obj[]>modelValue.value).push(getUnit);
 		}
 	} else {
+		// 行删除
 		(<Obj[]>modelValue.value).splice(idx, 1);
 	}
 };
@@ -66,7 +74,6 @@ const typeArr = computed(() => {
 		}
 	});
 	const map = { len: m, pos: n };
-	console.log([...map.len.values()]);
 	return [...map.len.values()];
 });
 

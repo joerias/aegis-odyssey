@@ -112,7 +112,7 @@ const handleOpen = (type: number, idx: number) => {
 				<el-button class="f12" type="primary" link @click="handleOpen(1, scope.$index)"> 打开 </el-button>
 				<el-button class="f12" type="primary" link @click="handleOpen(2, scope.$index)"> 删除 </el-button>
 			</template>
-			<template #add>
+			<!-- <template #add>
 				<o-select class="w100 mr10" v-model="tableAddValue.type" :list="['原告', '被告']" />
 				<el-input class="mr10" v-model="tableAddValue.name" clearable />
 				<o-radio class="mr10" v-model="tableAddValue.gender" type="button" :list="['男', '女']" />
@@ -120,7 +120,7 @@ const handleOpen = (type: number, idx: number) => {
 				<el-input class="mr10" v-model="tableAddValue.date" clearable />
 				<el-input class="mr10" v-model="tableAddValue.address" clearable />
 				<el-input class="mr10" v-model="tableAddValue.info" clearable />
-			</template>
+			</template> -->
 		</o-table>
 	</div>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSlots, computed } from "vue";
 import type { TableColumnCtx } from "element-plus";
+import { cloneDeep } from "lodash-es";
 defineOptions({
 	name: "OTable",
 });
@@ -11,7 +12,7 @@ type Props = {
 	header?: { [key: string]: { [key: string]: string | number } };
 	btnName?: string;
 	index?: boolean;
-	add?: boolean;
+	add?: boolean | null;
 	list?: TypeList;
 	merge?: string;
 };
@@ -27,7 +28,7 @@ interface SpanMethodProps {
 const props = withDefaults(defineProps<Props>(), {
 	btnName: "添加",
 	index: false,
-	add: false,
+	add: null,
 	merge: "",
 });
 
@@ -44,16 +45,36 @@ const getUnit = computed(() => {
 	return unit;
 });
 const addValue = defineModel("addValue");
-const addValueOrigin = { ...addValue };
+const addValueOrigin = cloneDeep(addValue.value);
 
-const addState = !!useSlots().add;
+const slotAddState = !!useSlots().add;
 const handleOperate = (idx: number) => {
 	if (typeof idx !== "number") {
 		// 行新增
-		if (addState) {
+		if (slotAddState) {
 			// 自定义新增
-			(<Obj[]>modelValue.value).push(<Obj>addValue.value);
-			addValue.value = { ...addValueOrigin };
+			if (props.merge) {
+				let i = 0;
+				const pos = new Map();
+				(<Obj[]>modelValue.value).forEach((v, i) => {
+					pos.set(v[props.merge], pos.has(v[props.merge]) ? pos.get(v[props.merge]) + 1 : i);
+				});
+				let has = false;
+				for (let i of pos.keys()) {
+					if (i === (<Obj>addValue.value)[props.merge]) has = true;
+				}
+				if (has) {
+					for (const [k, v] of pos.entries()) {
+						if ((<Obj>addValue.value)[props.merge] === k)
+							(<Obj[]>modelValue.value).splice(v + 1, 0, <Obj>addValue.value);
+					}
+				} else {
+					(<Obj[]>modelValue.value).push(<Obj>addValue.value);
+				}
+			} else {
+				(<Obj[]>modelValue.value).push(<Obj>addValue.value);
+			}
+			addValue.value = cloneDeep(addValueOrigin);
 		} else {
 			// 默认新增
 			(<Obj[]>modelValue.value).push(getUnit.value);
@@ -145,13 +166,18 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 				</template>
 			</el-table-column>
 		</template>
-		<el-table-column v-if="props.add && !$slots.operate" label="操作" width="60" header-align="center">
+		<el-table-column
+			v-if="typeof props.add === 'boolean' && !$slots.operate"
+			label="操作"
+			width="60"
+			header-align="center"
+		>
 			<template #default="scope">
 				<el-button class="f12" type="primary" link @click="handleOperate(scope.$index)"> 删除 </el-button>
 			</template>
 		</el-table-column>
 		<el-table-column
-			v-else="props.add && !$slots.operate"
+			v-else="typeof props.add === 'boolean' && !$slots.operate"
 			label="操作"
 			:width="props.header!.width ? props.header!.width.operate ?? 60 : 60"
 			header-align="center"
@@ -161,12 +187,14 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 			</template>
 		</el-table-column>
 	</el-table>
-	<div v-if="props.add" :class="['add-box', { single: !$slots.add }]">
+	<div v-if="typeof props.add === 'boolean'" :class="['add-box', { single: !$slots.add }]">
 		<div v-if="!!$slots.add" class="content">
 			<slot name="add" />
 		</div>
 		<div class="btn">
-			<el-button type="primary" plain @click="handleOperate">{{ props.btnName }}</el-button>
+			<el-button type="primary" plain @click="handleOperate" :disabled="!props.add">
+				{{ props.btnName }}
+			</el-button>
 		</div>
 	</div>
 </template>

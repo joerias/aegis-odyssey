@@ -162,6 +162,9 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 					<template v-else-if="props.header!.edit[o] === 'select'">
 						<o-select v-model="scope.row[o]" :list="props.list![o]" />
 					</template>
+					<template v-else-if="props.header!.edit[o] === 'date'">
+						<o-date v-model="scope.row[o]" type="date" />
+					</template>
 					<slot v-else-if="props.header!.edit[o] === 'custom'" :name="o" v-bind="scope" />
 				</template>
 			</el-table-column>
@@ -215,12 +218,11 @@ const objectSpanMethod = ({ rowIndex, columnIndex }: SpanMethodProps) => {
 	}
 	.content {
 		display: flex;
-		flex: 1;
+		:deep(> div) {
+			flex: 0 0 auto;
+		}
 		:deep(.el-radio-group) {
 			flex-wrap: nowrap;
-		}
-		:deep(.el-select) {
-			flex: 0 0 auto;
 		}
 	}
 	.btn {
